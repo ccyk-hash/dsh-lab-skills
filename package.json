@@ -1,0 +1,62 @@
+{
+  "name": "@local/dsh-lab-skills",
+  "version": "1.0.0",
+  "private": false,
+  "license": "MIT",
+  "author": "ccyk-hash",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ccyk-hash/dsh-lab-skills.git"
+  },
+  "homepage": "https://github.com/ccyk-hash/dsh-lab-skills#readme",
+  "bugs": {
+    "url": "https://github.com/ccyk-hash/dsh-lab-skills/issues"
+  },
+  "type": "module",
+  "description": "Bundle five lab skills (ChemDraw / LaTeX / Origin / Prism / SPSS) as one plugin with per-skill on-off switches and a per-session automatic router that decides which skills a new conversation should see.",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "skills",
+    "router",
+    "chemdraw",
+    "latex",
+    "origin",
+    "prism",
+    "spss"
+  ],
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "lib",
+    "skills",
+    "locale/*.json",
+    "icon.svg",
+    "README.md"
+  ],
+  "dsh": {
+    "manifestVersion": 1,
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-settings"
+      ]
+    }
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

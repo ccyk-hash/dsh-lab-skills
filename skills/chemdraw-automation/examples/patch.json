@@ -1,0 +1,11 @@
+{
+  "texts": [
+    {"id": 77, "text": "Revised title"}
+  ],
+  "bonds": [
+    {"id": 16, "order": 2}
+  ],
+  "atoms": [
+    {"id": 3, "charge": -1}
+  ]
+}

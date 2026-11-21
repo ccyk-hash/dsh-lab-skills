@@ -1,0 +1,4 @@
+- insert:
+    - id: lab-skills
+      name: '@local/dsh-lab-skills'
+      config: {}

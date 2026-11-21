@@ -1,0 +1,22 @@
+node_modules/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+*.egg-info/
+
+# 运行期状态（由插件写在 ~/.dsh/dsh-lab-skills/state.json，不入库）
+state.json
+
+# LaTeX / 构建产物
+*.aux
+*.toc
+*.out
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+build/
+dist/
+*.log

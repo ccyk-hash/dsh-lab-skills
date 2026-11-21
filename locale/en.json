@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Lab skills pack",
+    "description": "Bundles the ChemDraw, LaTeX, Origin, Prism and SPSS skills into one plugin: at the start of every new conversation it reads the first user message and routes only the skills that message needs to the model. Skills that were not routed stay out of the model-visible catalog while remaining callable by hand. The settings page offers one switch per skill, an automatic-routing toggle with a hit threshold, and editable trigger words."
+  }
+}
