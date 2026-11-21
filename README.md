@@ -61,6 +61,15 @@ provider **始终返回全部 5 条**，用 `invocation.modelInvocable` 表达�
 
 设置页通过两条本地路由读写状态：`GET/POST /api/lab-skills/state`、`POST /api/lab-skills/reset`（node handler，写前用 `ctx.connection.requestRejection` 拦跨站请求）。
 
+Client 侧不写死地址，`apiBase` 按以下顺序解析一次，再拼出两条路由：
+
+1. `globalThis.__DSH_LAB_SKILLS_API_BASE__`（调试或反向代理时的显式覆盖，尾部斜杠会被去掉）
+2. `window.__DSH_BOOT__` 里本包的 entry `url`：取它的 origin 加上 `/plugins/` 之前的路径前缀，因此挂在 `/app/` 这类子路径下也能命中
+3. `location.origin`
+4. 空串（请求退化为同源相对路径，与写死 `/api/lab-skills/...` 等价）
+
+`apiBase` 与 `apiUrl` 都从模块导出，便于离线核对：`node test/client-api-base.mjs` 会覆盖上面四种挂载形态。
+
 状态文件：`%DSH_HOME%`（默认 `~/.dsh`）`/dsh-lab-skills/state.json`
 
 ```json
@@ -90,7 +99,8 @@ provider **始终返回全部 5 条**，用 `invocation.modelInvocable` 表达�
 
 ```bash
 node --version   # >= 20
-node test/smoke.mjs
+node test/smoke.mjs          # Host 半：provider / 路由判定 / 工具 / 两条 web 路由
+node test/client-api-base.mjs # Client 半：API 基址在四种挂载形态下的解析
 ```
 
 在 DSH 里：`plugin_manager` → `install_bundle`，target 指向本目录。安装后 profile 会多一行 `lab-skills` 的 patch 与一个符号链接。改动 Host 代码后需重启 profile 才生效。

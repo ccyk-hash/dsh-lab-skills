@@ -11,8 +11,38 @@ window.__ModuleLoader__.load({
     const { useCallback, useEffect, useState } = React
     const h = React.createElement
 
-    const API_STATE = '/api/lab-skills/state'
-    const API_RESET = '/api/lab-skills/reset'
+    const PACKAGE_ID = '@local/dsh-lab-skills'
+    const API_ROOT = '/api/lab-skills'
+
+    // The Host route is registered by this plugin, but where that route answers depends on how the page was mounted:
+    // a plain origin, a path prefix in front of the Web GUI, or a test harness that stubs it. Resolve once, in this
+    // order: an explicit override, the entry URL this bundle was served from (which carries any prefix the page lives
+    // under), then the page origin. The last fallback is the empty string, which leaves the request same-origin and
+    // relative — the same behaviour as a literal '/api/lab-skills/...'.
+    const apiBase = (() => {
+      const override = globalThis.__DSH_LAB_SKILLS_API_BASE__
+      if (typeof override === 'string' && override.trim() !== '') return override.trim().replace(/\/+$/, '')
+      const href = typeof location !== 'undefined' ? location.href : undefined
+      const boot = globalThis.__DSH_BOOT__
+      const rows = boot && Array.isArray(boot.entries) ? boot.entries : []
+      const row = rows.find((entry) => entry && entry.id === PACKAGE_ID)
+      if (row && typeof row.url === 'string' && href) {
+        try {
+          const served = new URL(row.url, href)
+          const marker = served.pathname.indexOf('/plugins/')
+          const prefix = marker >= 0 ? served.pathname.slice(0, marker) : ''
+          // A row served straight from the root yields '/' here; keeping it would double the slash in every request.
+          return (served.origin + prefix).replace(/\/+$/, '')
+        } catch {
+          // A malformed entry URL is not worth failing the panel over; the page origin below covers the common case.
+        }
+      }
+      return typeof location !== 'undefined' && location.origin ? location.origin : ''
+    })()
+
+    const apiUrl = (path) => apiBase + API_ROOT + path
+    const API_STATE = apiUrl('/state')
+    const API_RESET = apiUrl('/reset')
 
     const S = {
       wrap: { display: 'flex', flexDirection: 'column', gap: '18px', padding: '4px 0 24px' },
@@ -361,6 +391,10 @@ window.__ModuleLoader__.load({
 
     return {
       inject: ['slots'],
+      // Exposed for the offline harness and for anyone debugging a mount: it is the origin+prefix every request in this
+      // panel is resolved against, and it is a plain string so reading it changes nothing.
+      apiBase,
+      apiUrl,
       apply(ctx) {
         ctx.slots.inject('settings.section', () =>
           ctx.slots.register(
