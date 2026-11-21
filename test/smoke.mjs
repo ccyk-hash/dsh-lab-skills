@@ -17,7 +17,31 @@ const hooks = new Map()
 const providers = []
 const tools = []
 const routes = []
+const agentScoped = []
 let invalidations = 0
+
+// An agent that already exists when the plugin loads: a reload or an enable in the middle of a conversation must
+// adopt it, otherwise the running conversation keeps falling back to the built-in provider.
+const makeAgent = (id) => {
+  const agent = { id }
+  const agentCtx = {
+    effect(fn) {
+      return fn()
+    },
+    inject(_deps, callback) {
+      callback(agentCtx)
+    },
+    skills: {
+      registerProvider(create) {
+        agentScoped.push({ id, provider: create({ invalidate: () => (invalidations += 1) }) })
+        return () => {}
+      },
+    },
+  }
+  agent.ctx = agentCtx
+  return agent
+}
+const agentLive = makeAgent('agent-live')
 
 const ctx = {
   logger: {
@@ -35,6 +59,10 @@ const ctx = {
   },
   inject(_deps, callback) {
     callback(ctx)
+  },
+  get(name) {
+    if (name === 'agents') return { list: () => [agentLive] }
+    return undefined
   },
   skills: {
     registerProvider(create) {
@@ -66,38 +94,21 @@ assert.ok(hooks.has('agent/inbox/inserted'), 'inbox listener registered')
 const provider = providers[0]
 
 // Every agent gets its own provider instance registered inside that agent's context: the nearest scope layer is where
-// a bundled filesystem root lives, so only an agent-layer registration can outrank it.
-const agentScoped = []
-const makeAgent = (id) => {
-  const agent = { id }
-  const agentCtx = {
-    effect(fn) {
-      return fn()
-    },
-    inject(_deps, callback) {
-      callback(agentCtx)
-    },
-    skills: {
-      registerProvider(create) {
-        agentScoped.push({ id, provider: create({ invalidate: () => (invalidations += 1) }) })
-        return () => {}
-      },
-    },
-  }
-  agent.ctx = agentCtx
-  return agent
-}
+// a bundled filesystem root lives, so only an agent-layer registration can outrank it. makeAgent lives above the fake
+// context because the load-time sweep adopts the agent that was already live.
 const agentA = makeAgent('agent-a')
 const agentB = makeAgent('agent-b')
+
+assert.equal(agentScoped.length, 1, 'the agent that was already live is adopted on load')
 
 assert.ok(hooks.has('agent/created'), 'agent/created listener registered')
 const agentCreated = hooks.get('agent/created')
 agentCreated({ agent: agentA })
 agentCreated({ agent: agentB })
 agentCreated({ agent: agentA }) // idempotent: one provider per agent
-assert.equal(agentScoped.length, 2, 'one agent-scoped provider per agent')
-const boundA = agentScoped[0].provider
-const boundB = agentScoped[1].provider
+assert.equal(agentScoped.length, 3, 'one agent-scoped provider per agent')
+const boundA = agentScoped.find((entry) => entry.id === 'agent-a').provider
+const boundB = agentScoped.find((entry) => entry.id === 'agent-b').provider
 
 const visibleBound = async (bound) =>
   (await bound.list({})).filter((entry) => entry.invocation.modelInvocable).map((entry) => entry.name)

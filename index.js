@@ -259,29 +259,40 @@ export function apply(ctx, config = {}) {
   // is ever compared. Registering inside each agent's own context puts this plugin in that same nearest layer, where
   // CANDIDATE_RANK wins.
   const agentProviders = new WeakSet()
-  ctx.effect(() => {
-    const off = ctx.on('agent/created', (payload) => {
-      const agent = payload?.agent
-      if (!agent?.ctx || agentProviders.has(agent)) return
-      agentProviders.add(agent)
-      // A service can only be read through a context that declares it, so the agent context injects its own.
-      const attach = (scoped) => {
-        scoped.effect(() => {
-          let ownControl
-          const dispose = scoped.skills.registerProvider((control) => {
-            ownControl = control
-            providerControls.add(control)
-            return createProvider(agent)
-          })
-          return () => {
-            if (ownControl) providerControls.delete(ownControl)
-            dispose()
-          }
+  function ensureAgentProvider(agent) {
+    if (!agent?.ctx || agentProviders.has(agent)) return
+    agentProviders.add(agent)
+    // A service can only be read through a context that declares it, so the agent context injects its own.
+    const attach = (scoped) => {
+      scoped.effect(() => {
+        let ownControl
+        const dispose = scoped.skills.registerProvider((control) => {
+          ownControl = control
+          providerControls.add(control)
+          return createProvider(agent)
         })
-      }
-      if (typeof agent.ctx.inject === 'function') agent.ctx.inject(['skills'], attach)
-      else attach(agent.ctx)
-    })
+        return () => {
+          if (ownControl) providerControls.delete(ownControl)
+          dispose()
+        }
+      })
+    }
+    if (typeof agent.ctx.inject === 'function') agent.ctx.inject(['skills'], attach)
+    else attach(agent.ctx)
+  }
+
+  ctx.effect(() => {
+    const off = ctx.on('agent/created', (payload) => ensureAgentProvider(payload?.agent))
+    // Adopt the agents that were already live when this instance loaded (a reload, or an enable in the middle of a
+    // conversation). Without this sweep the running conversation keeps falling back to the built-in provider and only
+    // the next one would be governed.
+    let live = []
+    try {
+      live = ctx.get?.('agents')?.list?.() ?? []
+    } catch {
+      live = []
+    }
+    for (const agent of live) ensureAgentProvider(agent)
     return () => {
       if (typeof off === 'function') off()
     }
