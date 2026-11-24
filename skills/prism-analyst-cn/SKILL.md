@@ -1,6 +1,6 @@
 ---
 name: prism-analyst-cn
-description: 用中文一句话调用本机 GraphPad Prism 8.0.2 做统计分析并输出结果。触发词：Prism、GraphPad、t检验、ANOVA、方差分析、线性回归、拟合、出版级图、三线表报告。执行器已通过 P0/P1 验证，统计值全部来自 Prism 原生引擎。
+description: 用中文一句话调用本机 GraphPad Prism 8.0.2（执行器 D:/workbuddy/daily use/prism8/prism_runner.py）做统计并出结果：统计值一律取自 Prism 原生结果表，脚本只能 RecalcAll 重算，可用分析取决于 templates/registry.json——当前仅 ttest_two_group（别名 t检验/两组比较/两样本比较）、anova_tukey_one_way（单因素方差分析/多组比较/tukey）、linear_regression（线性回归/拟合直线）。适用：.pzfx 工程内的上述三类分析、剂量-反应 IC50/EC50、Kaplan-Meier 生存曲线与 Prism 出图。不适用：无 .pzfx 工程，或信度 Cronbach、因子分析、中介调节等未登记分析——改用 spss-analyst-cn。路由词：prism、graphpad、graphpad prism、pzfx、剂量反应、剂量-反应、ic50、ec50、生存曲线、kaplan、tukey。
 disable-model-invocation: true
 ---
 

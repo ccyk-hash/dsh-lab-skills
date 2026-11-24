@@ -1,6 +1,6 @@
 ---
 name: spss-analyst-cn
-description: 用本机 IBM SPSS Statistics 做中文实证分析并输出论文级产物。当用户提到 SPSS、统计分析、描述统计、t 检验、方差分析、相关、回归、信度、因子分析、中介调节、问卷数据、.sav 文件，或要求"帮我分析这份数据/出三线表/写结果段落/生成分析报告"时使用。产出 Markdown 结果表、可复现 .sps、.spv 原始结果、300dpi 图表与 Word 三线表报告。
+description: 用本机 IBM SPSS Statistics 25（C:/Program Files/IBM/SPSS/Statistics/25，MCP 服务 spss）把中文需求翻成 SPSS 语法并执行，产出论文级产物：Markdown 结果表、可复现 .sps、.spv 原始结果、spss_chart 的 1600x1000 PNG、spss_make_report 合成的 Word 三线表报告，落 results/tasks/<任务名>/。适用：读写 .sav 问卷/量表数据，描述统计、t 检验、方差分析、相关、回归、logistic、信度 Cronbach、因子分析/主成分、聚类、卡方、中介调节，以及「分析这份数据 / 出三线表 / 写结果段落」。不适用：只要 Prism 原生曲线的 IC50 与生存曲线（改用 prism-analyst-cn）；仅数图表个数这类计数用普通脚本。路由词：spss、.sav、sav 文件、方差分析、回归分析、线性回归、logistic、信度、cronbach、因子分析、主成分、聚类分析、卡方、t 检验、t检验、相关分析、问卷数据、量表、中介调节、三线表。
 disable-model-invocation: true
 ---
 

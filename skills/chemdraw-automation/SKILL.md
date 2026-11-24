@@ -1,6 +1,6 @@
 ---
 name: chemdraw-automation
-description: 用中文一句话驱动本机 ChemDraw 绘制/编辑化学结构与反应式并导出可编辑 CDXML/CDX，在 DeepSeek Harness 的 bash 工具里直接执行。触发词：ChemDraw、化学结构式、反应式、机理图、画分子、结构式导出、CDXML、CDX、ChemDraw 自动化、chemdraw、reaction scheme。
+description: 在本机 ChemDraw（Windows COM，ProgID ChemDraw_x64.Application，23.1.1.3）绘制/编辑结构式与反应式，产出可编辑 CDXML/CDX 加预览 PNG/EMF。适用：教材习题与复习讲义的结构式、反应式、命名题、机理题插图（有机化学_第七版 第一、二章 figs/ 38 幅原生出图，仅存 PNG；第三章 figs/ c3_01..c3_13 为 cdxml+png+json 三件套，CreationProgram=chemdraw-auto；第三章_化学性质复习 figs/c3r_02 为溴鎓离子机理图）、按 SMILES 或名称出结构、批量改样式导出。不适用：轨道、能量曲线、过渡态等纯示意图走 tools/chemdraw/svgfig.py（RDKit+matplotlib，第三章 fig3-* 20 幅），教材页裁图走裁切流程。本技能不做化学推断。路由词：chemdraw、cdxml、cdx、smiles、inchi、molfile、结构式、结构式图、化学结构、分子结构、反应式、画结构、化学式、命名题、机理、机理图、骨架结构。
 license: MIT
 compatibility: Windows only（MSYS bash 下调用）。需要本机已安装并授权的桌面 ChemDraw 23.x（ProgID ChemDraw_x64.Application），以及一个装了 rdkit + pywin32 + lxml 的 Python 3.10–3.13。COM 自动化在 WSL/Linux/无桌面会话中不可用。
 allowed-tools: Read Write Edit Bash Glob Grep
