@@ -1,6 +1,6 @@
 ---
 name: origin-plot
-description: 用 originpro COM 桥驱动本机 Origin 2024（D:/origin/Origin64.exe 加 C:/Python314/python.exe）把 CSV/数据表做成出版级散点、折线、柱状图，批量导出 PNG/PDF/TIFF/SVG 并存可编辑 .opju 工程。适用：要 Origin 出图、要改已有 .opju/.ogw 工程、要出版级模板。不适用：matplotlib 或 PIL 手绘示意图（大学物理学_下册 第9章 figs/ 31 幅、期中模拟卷 wave17.png、tools/plot_q9.py 的 PIL 手绘）与教材页裁图（figs/、images/ 共 31 个目录）——出图、绘图、作图、曲线拟合在本工作区多指这两类。路由词：origin、originlab、originpro、opju、ogw、origin 画图、origin绘图、origin 绘图。
+description: Automate Origin 2024 (OriginLab) on this machine via the originpro COM bridge. Use it to create workbooks from CSV/data files, make publication-quality scatter/line/bar plots using Origin templates, batch-export PNG/PDF/TIFF/SVG figures, and archive editable .opju projects. Trigger words: Origin 绘图、OriginPro、opju、originpro、出版级图、Origin 导出.
 license: MIT
 compatibility: Windows only. Requires Origin 2024 at D:\origin\Origin64.exe and Python 3.14 at C:\Python314\python.exe with originpro+pywin32 installed. Origin COM automation does not work under WSL/Linux.
 allowed-tools: Read Write Edit Bash Glob Grep

@@ -1,6 +1,6 @@
 ---
 name: latex-automation
-description: 在本机 TeX Live（D:/Latex/texlive/2026）上跑 .tex 工程：编译出 PDF、把 .log 解析成按 root_cause 因果排序的诊断、缺包缺字体离线安装命令、有界自动修复、版面量化（overfull/underfull/孤行/寡行）与渲染页视觉检查、chktex 与 latexindent、模板建工程；产物落 latex-out/ 并含 build-report.json。仅在处理 .tex 工程时适用（不联网、不自动装包）。不适用：HTML 或 docx 精讲的排版与参考文献，那属于 KaTeX 转 OMML 加 html2docx 的流水线（outputs/ 下 0 个 .tex/.bib，28 个 PDF 无一份出自 TeX 引擎）。路由词：latex、xelatex、pdflatex、lualatex、latexmk、biber、bibtex、tex、.tex、.bib、ctex、tex live、编译 pdf、编译pdf、论文编译、overfull、underfull、孤行、寡行、latexindent、chktex。
+description: 在本机 TeX Live 上自动化 LaTeX 任务：编译出 PDF、把 .log 变成带因果排序的结构化诊断、缺包缺字体给出离线安装命令、有界修复闭环自动试改、版面量化（溢出/空洞/孤行）与渲染页面做视觉检查、chktex 静态检查与 latexindent 格式化、从模板新建工程。触发词：LaTeX、latex、TeX、XeLaTeX、pdflatex、lualatex、编译 PDF、论文编译、排版、ctex、中文 LaTeX、latexmk、biber、bibtex、参考文献、.tex、.log、编译报错、overfull、underfull、缺包、缺字体、修复编译错误、自动修 LaTeX、版面检查、孤行、寡行、空洞、模板、latexindent、chktex、渲染页面、LaTeX 自动化。
 license: MIT
 compatibility: Windows（MSYS bash 调用），已在 TeX Live 2026 + Python 3.14 实测；Linux/macOS 上同样可用，只是路径与引擎探测分支不同。需要本机已装 TeX Live（含 latexmk、pdflatex、xelatex），可选 biber/bibtex/kpsewhich/pdftoppm/pdfinfo/chktex/latexindent。不联网、不自动安装任何 TeX 包。
 allowed-tools: Read Write Edit Bash Glob Grep
